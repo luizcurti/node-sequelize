@@ -1,34 +1,36 @@
 const { Op } = require('sequelize');
+const sequelize = require('../database');
 const User = require('../models/User');
 
 module.exports = {
   async show(req, res) {
+    const isSqlite = sequelize.getDialect && sequelize.getDialect() === 'sqlite';
     const users = await User.findAll({
       attributes: ['name', 'email'],
       where: {
         email: {
-          [Op.iLike]: '%@mail.com'
-        }
+          [isSqlite ? Op.like : Op.iLike]: isSqlite ? '%@mail.com%' : '%@mail.com',
+        },
       },
       include: [
-        { 
-          association: 'addresses', 
-          where: { 
-            street: 'Regent Street'
-          } 
+        {
+          association: 'addresses',
+          where: {
+            street: 'Regent Street',
+          },
         },
-        { 
-          association: 'techs', 
+        {
+          association: 'techs',
           required: false,
           where: {
             name: {
-              [Op.iLike]: 'React%'
-            }
-          }
+              [isSqlite ? Op.like : Op.iLike]: isSqlite ? 'React%' : 'React%',
+            },
+          },
         },
-      ]
-    })
+      ],
+    });
 
     return res.json(users);
-  }
+  },
 };

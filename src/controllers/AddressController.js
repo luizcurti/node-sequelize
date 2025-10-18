@@ -6,8 +6,12 @@ module.exports = {
     const { user_id } = req.params;
 
     const user = await User.findByPk(user_id, {
-      include: { association: 'addresses' }
+      include: { association: 'addresses' },
     });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
     return res.json(user.addresses);
   },
@@ -30,5 +34,5 @@ module.exports = {
     });
 
     return res.json(address);
-  }
+  },
 };

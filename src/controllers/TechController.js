@@ -6,14 +6,18 @@ module.exports = {
     const { user_id } = req.params;
 
     const user = await User.findByPk(user_id, {
-      include: { 
-        association: 'techs', 
-        attributes: ['name'], 
-        through: { 
-          attributes: []
-        } 
-      }
-    })
+      include: {
+        association: 'techs',
+        attributes: ['name'],
+        through: {
+          attributes: [],
+        },
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
     return res.json(user.techs);
   },
@@ -28,8 +32,8 @@ module.exports = {
       return res.status(400).json({ error: 'User not found' });
     }
 
-    const [ tech ] = await Tech.findOrCreate({
-      where: { name }
+    const [tech] = await Tech.findOrCreate({
+      where: { name },
     });
 
     await user.addTech(tech);
@@ -48,11 +52,11 @@ module.exports = {
     }
 
     const tech = await Tech.findOne({
-      where: { name }
+      where: { name },
     });
 
     await user.removeTech(tech);
 
     return res.json();
-  }
+  },
 };

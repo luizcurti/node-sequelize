@@ -1,0 +1,6 @@
+node_modules
+coverage
+dist
+build
+src/database/*.sqlite
+src/database/*.sqlite3
