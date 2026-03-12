@@ -153,10 +153,10 @@ describe('Addresses routes', () => {
     it('creates an address and returns 201', async () => {
       const res = await request(app)
         .post(`/users/${user.id}/addresses`)
-        .send({ zipcode: '01001-000', street: 'Avenida Paulista', number: 1000 });
+        .send({ zipcode: '01001-000', street: 'Main Street', number: 1000 });
 
       expect(res.status).toBe(201);
-      expect(res.body.street).toBe('Avenida Paulista');
+      expect(res.body.street).toBe('Main Street');
     });
 
     it('returns 400 when required fields are missing', async () => {

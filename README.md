@@ -1,59 +1,59 @@
 # Node.js + Sequelize API
 
-> API RESTful completa construída com Node.js, Express e Sequelize ORM. Suporte multi-banco (SQLite/PostgreSQL), testes com 100% de coverage e Docker.
+> A complete RESTful API built with Node.js, Express, and Sequelize ORM. Multi-database support (SQLite/PostgreSQL), 100% test coverage, and Docker.
 
 [![Node.js](https://img.shields.io/badge/Node.js-v22.x-green.svg)](https://nodejs.org/)
 [![Express](https://img.shields.io/badge/Express-v5.x-blue.svg)](https://expressjs.com/)
 [![Sequelize](https://img.shields.io/badge/Sequelize-v6.x-52B0E7.svg)](https://sequelize.org/)
 [![Jest](https://img.shields.io/badge/Jest-v29.x-C21325.svg)](https://jestjs.io/)
-[![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen.svg)](#-testes)
+[![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen.svg)](#-tests)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-## Sumário
+## Table of Contents
 
-- [Funcionalidades](#-funcionalidades)
+- [Features](#-features)
 - [Stack](#-stack)
-- [Estrutura do projeto](#-estrutura-do-projeto)
-- [Como rodar](#-como-rodar)
-- [Configuração de banco](#-configuração-de-banco)
-- [Rotas da API](#-rotas-da-api)
-- [Testes](#-testes)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Database Configuration](#-database-configuration)
+- [API Routes](#-api-routes)
+- [Tests](#-tests)
 - [Lint](#-lint)
 - [Docker](#-docker)
-- [Modelos](#-modelos)
-- [Licença](#-licença)
+- [Models](#-models)
+- [License](#-license)
 
 ---
 
-## ✨ Funcionalidades
+## ✨ Features
 
-- CRUD completo de **usuários**, **endereços** e **tecnologias**
-- Relacionamentos ORM: `hasMany`, `belongsTo`, `belongsToMany`
-- Validações de entrada (campos obrigatórios, email único, email inválido → 400/409)
-- Tratamento de erros em todos os controllers (500 nunca vaza stack trace)
-- Suporte a SQLite (dev/test) e PostgreSQL (produção)
-- **118 testes** — unitários + integração via supertest — **100% de coverage**
-- Lint com ESLint (Airbnb style guide)
-- Docker Compose com healthcheck e serviço da aplicação
+- Full CRUD for **users**, **addresses**, and **technologies**
+- ORM relationships: `hasMany`, `belongsTo`, `belongsToMany`
+- Input validation (required fields, unique email, invalid email → 400/409)
+- Error handling in all controllers (500 never leaks stack traces)
+- SQLite (dev/test) and PostgreSQL (production) support
+- **118 tests** — unit + integration via supertest — **100% coverage**
+- Lint with ESLint (Airbnb style guide)
+- Docker Compose with healthcheck and app service
 
 ---
 
 ## 🛠️ Stack
 
-| Camada | Tecnologia |
-|--------|-----------|
+| Layer | Technology |
+|-------|-----------|
 | Runtime | Node.js 22.x |
 | Framework | Express 5.x |
 | ORM | Sequelize 6.x |
-| Banco (dev/test) | SQLite 3 |
-| Banco (prod) | PostgreSQL 14 |
-| Testes | Jest 29 + Supertest |
+| Database (dev/test) | SQLite 3 |
+| Database (prod) | PostgreSQL 14 |
+| Tests | Jest 29 + Supertest |
 | Lint | ESLint 8 (Airbnb) |
 | Container | Docker + Docker Compose |
 
 ---
 
-## 📁 Estrutura do projeto
+## 📁 Project Structure
 
 ```
 node-sequelize/
@@ -64,19 +64,19 @@ node-sequelize/
 │   │   ├── TechController.js       # index, store, delete
 │   │   └── ReportController.js     # show
 │   ├── models/
-│   │   ├── User.js                 # validações + associações
+│   │   ├── User.js                 # validations + associations
 │   │   ├── Address.js
 │   │   └── Tech.js
 │   ├── database/
-│   │   ├── index.js                # conexão Sequelize
+│   │   ├── index.js                # Sequelize connection
 │   │   └── migrations/             # 4 migrations
 │   ├── config/
 │   │   └── database.js             # dev / test / production
 │   ├── __tests__/
-│   │   ├── controllers/            # testes unitários (mocks)
-│   │   ├── models/                 # testes de model (SQLite in-memory)
+│   │   ├── controllers/            # unit tests (mocks)
+│   │   ├── models/                 # model tests (SQLite in-memory)
 │   │   └── integration/
-│   │       └── routes.test.js      # testes de integração (supertest)
+│   │       └── routes.test.js      # integration tests (supertest)
 │   ├── app.js
 │   ├── routes.js
 │   └── server.js
@@ -91,51 +91,51 @@ node-sequelize/
 
 ---
 
-## 🚀 Como rodar
+## 🚀 Getting Started
 
-### Pré-requisitos
+### Prerequisites
 
-- Node.js 22.x ou superior
+- Node.js 22.x or higher
 - npm
-- Docker (opcional, para PostgreSQL)
+- Docker (optional, for PostgreSQL)
 
-### Instalação
+### Installation
 
 ```bash
-# 1. Clone o repositório
+# 1. Clone the repository
 git clone https://github.com/luizcurti/node-sequelize.git
 cd node-sequelize
 
-# 2. Instale as dependências
+# 2. Install dependencies
 npm install
 
-# 3. Copie o .env (ajuste conforme necessário)
+# 3. Copy the .env file (adjust as needed)
 cp .env.example .env
 
-# 4. Rode as migrations (cria o banco SQLite local)
+# 4. Run migrations (creates the local SQLite database)
 npm run db:migrate
 
-# 5. Inicie o servidor de desenvolvimento
+# 5. Start the development server
 npm run dev
 ```
 
-A API estará disponível em `http://localhost:3333`.
+The API will be available at `http://localhost:3333`.
 
 ---
 
-## 🗄️ Configuração de banco
+## 🗄️ Database Configuration
 
-O projeto usa `NODE_ENV` para selecionar o banco automaticamente via `src/config/database.js`.
+The project uses `NODE_ENV` to automatically select the database via `src/config/database.js`.
 
-| Ambiente | Banco | Storage |
-|----------|-------|---------|
+| Environment | Database | Storage |
+|-------------|----------|---------|
 | `development` | SQLite | `./database.sqlite` |
 | `test` | SQLite | `:memory:` (RAM) |
-| `production` | PostgreSQL | via variáveis de ambiente |
+| `production` | PostgreSQL | via environment variables |
 
-### Variáveis de ambiente (produção)
+### Environment Variables (production)
 
-Crie um arquivo `.env` baseado no `.env.example`:
+Create a `.env` file based on `.env.example`:
 
 ```bash
 NODE_ENV=production
@@ -149,24 +149,24 @@ DB_PASS=docker
 
 ---
 
-## 📡 Rotas da API
+## 📡 API Routes
 
 > Base URL: `http://localhost:3333`
 >
-> Importe `api.collection.json` no Postman para usar todas as rotas prontas.
+> Import `api.collection.json` into Postman to use all routes ready-to-go.
 
 ---
 
-### Usuários
+### Users
 
 #### `GET /users`
-Lista todos os usuários.
+Returns all users.
 
 ```bash
 curl http://localhost:3333/users
 ```
 
-**Resposta 200:**
+**Response 200:**
 ```json
 [
   { "id": 1, "name": "Alice", "email": "alice@example.com", "created_at": "...", "updated_at": "..." }
@@ -176,148 +176,148 @@ curl http://localhost:3333/users
 ---
 
 #### `POST /users`
-Cria um novo usuário.
+Creates a new user.
 
 **Body (JSON):**
 ```json
-{ "name": "Alice Silva", "email": "alice@example.com" }
+{ "name": "Alice Smith", "email": "alice@example.com" }
 ```
 
 ```bash
 curl -X POST http://localhost:3333/users \
   -H "Content-Type: application/json" \
-  -d '{"name": "Alice Silva", "email": "alice@example.com"}'
+  -d '{"name": "Alice Smith", "email": "alice@example.com"}'
 ```
 
-| Status | Situação |
-|--------|----------|
-| `201` | Usuário criado |
-| `400` | `name` ou `email` ausentes |
-| `409` | Email já cadastrado |
+| Status | Situation |
+|--------|-----------|
+| `201` | User created |
+| `400` | `name` or `email` missing |
+| `409` | Email already registered |
 
 ---
 
 #### `PUT /users/:id`
-Atualiza `name` e/ou `email` de um usuário.
+Updates a user's `name` and/or `email`.
 
 **Body (JSON):**
 ```json
-{ "name": "Alice Costa", "email": "alice.nova@example.com" }
+{ "name": "Alice Jones", "email": "alice.new@example.com" }
 ```
 
 ```bash
 curl -X PUT http://localhost:3333/users/1 \
   -H "Content-Type: application/json" \
-  -d '{"name": "Alice Costa"}'
+  -d '{"name": "Alice Jones"}'
 ```
 
-| Status | Situação |
-|--------|----------|
-| `200` | Usuário atualizado |
-| `404` | Usuário não encontrado |
-| `409` | Novo email já em uso |
+| Status | Situation |
+|--------|-----------|
+| `200` | User updated |
+| `404` | User not found |
+| `409` | New email already in use |
 
 ---
 
 #### `DELETE /users/:id`
-Remove um usuário. Endereços vinculados são excluídos em cascata.
+Removes a user. Associated addresses are deleted in cascade.
 
 ```bash
 curl -X DELETE http://localhost:3333/users/1
 ```
 
-| Status | Situação |
-|--------|----------|
-| `204` | Removido (sem corpo) |
-| `404` | Usuário não encontrado |
+| Status | Situation |
+|--------|-----------|
+| `204` | Deleted (no body) |
+| `404` | User not found |
 
 ---
 
-### Endereços
+### Addresses
 
 #### `GET /users/:user_id/addresses`
-Lista endereços de um usuário.
+Returns all addresses for a user.
 
 ```bash
 curl http://localhost:3333/users/1/addresses
 ```
 
-**Resposta 200:**
+**Response 200:**
 ```json
 [
-  { "id": 1, "zipcode": "01001-000", "street": "Avenida Paulista", "number": 1000, "user_id": 1, "created_at": "...", "updated_at": "..." }
+  { "id": 1, "zipcode": "01001-000", "street": "Paulista Avenue", "number": 1000, "user_id": 1, "created_at": "...", "updated_at": "..." }
 ]
 ```
 
 ---
 
 #### `POST /users/:user_id/addresses`
-Cria endereço vinculado ao usuário.
+Creates an address linked to the user.
 
 **Body (JSON):**
 ```json
-{ "zipcode": "01001-000", "street": "Avenida Paulista", "number": 1000 }
+{ "zipcode": "01001-000", "street": "Paulista Avenue", "number": 1000 }
 ```
 
 ```bash
 curl -X POST http://localhost:3333/users/1/addresses \
   -H "Content-Type: application/json" \
-  -d '{"zipcode": "01001-000", "street": "Avenida Paulista", "number": 1000}'
+  -d '{"zipcode": "01001-000", "street": "Paulista Avenue", "number": 1000}'
 ```
 
-| Status | Situação |
-|--------|----------|
-| `201` | Endereço criado |
-| `400` | `zipcode`, `street` ou `number` ausentes |
-| `404` | Usuário não encontrado |
+| Status | Situation |
+|--------|-----------|
+| `201` | Address created |
+| `400` | `zipcode`, `street`, or `number` missing |
+| `404` | User not found |
 
 ---
 
 #### `PUT /users/:user_id/addresses/:address_id`
-Atualiza um endereço (garantindo que pertence ao usuário).
+Updates an address (ensuring it belongs to the user).
 
 **Body (JSON):**
 ```json
-{ "zipcode": "04538-132", "street": "Rua Olimpíadas", "number": 360 }
+{ "zipcode": "04538-132", "street": "New Street", "number": 360 }
 ```
 
 ```bash
 curl -X PUT http://localhost:3333/users/1/addresses/2 \
   -H "Content-Type: application/json" \
-  -d '{"street": "Rua Nova"}'
+  -d '{"street": "New Street"}'
 ```
 
-| Status | Situação |
-|--------|----------|
-| `200` | Endereço atualizado |
-| `404` | Usuário ou endereço não encontrado |
+| Status | Situation |
+|--------|-----------|
+| `200` | Address updated |
+| `404` | User or address not found |
 
 ---
 
 #### `DELETE /users/:user_id/addresses/:address_id`
-Remove um endereço.
+Removes an address.
 
 ```bash
 curl -X DELETE http://localhost:3333/users/1/addresses/2
 ```
 
-| Status | Situação |
-|--------|----------|
-| `204` | Removido (sem corpo) |
-| `404` | Usuário ou endereço não encontrado |
+| Status | Situation |
+|--------|-----------|
+| `204` | Deleted (no body) |
+| `404` | User or address not found |
 
 ---
 
-### Tecnologias
+### Technologies
 
 #### `GET /users/:user_id/techs`
-Lista techs do usuário (apenas o campo `name`).
+Returns the user's techs (only the `name` field).
 
 ```bash
 curl http://localhost:3333/users/1/techs
 ```
 
-**Resposta 200:**
+**Response 200:**
 ```json
 [{ "name": "React" }, { "name": "Node.js" }]
 ```
@@ -325,7 +325,7 @@ curl http://localhost:3333/users/1/techs
 ---
 
 #### `POST /users/:user_id/techs`
-Adiciona uma tech ao usuário. Se a tech não existir, é criada automaticamente (`findOrCreate`).
+Adds a tech to the user. If the tech does not exist, it is created automatically (`findOrCreate`).
 
 **Body (JSON):**
 ```json
@@ -338,46 +338,46 @@ curl -X POST http://localhost:3333/users/1/techs \
   -d '{"name": "React"}'
 ```
 
-| Status | Situação |
-|--------|----------|
-| `201` | Tech associada |
-| `400` | `name` ausente |
-| `404` | Usuário não encontrado |
+| Status | Situation |
+|--------|-----------|
+| `201` | Tech associated |
+| `400` | `name` missing |
+| `404` | User not found |
 
 ---
 
-#### `DELETE /users/:user_id/techs?name=<nome>`
-Remove a associação usuário-tech. A tech permanece na tabela `techs`.
+#### `DELETE /users/:user_id/techs?name=<tech-name>`
+Removes the user-tech association. The tech itself remains in the `techs` table.
 
-> ⚠️ O nome da tech é passado como **query param**, não no body.
+> ⚠️ The tech name is passed as a **query param**, not in the request body.
 
 ```bash
 curl -X DELETE "http://localhost:3333/users/1/techs?name=React"
 ```
 
-| Status | Situação |
-|--------|----------|
-| `204` | Associação removida (sem corpo) |
-| `400` | Query param `name` ausente |
-| `404` | Usuário ou tech não encontrado |
+| Status | Situation |
+|--------|-----------|
+| `204` | Association removed (no body) |
+| `400` | Query param `name` missing |
+| `404` | User or tech not found |
 
 ---
 
-### Relatório
+### Report
 
 #### `GET /report`
-Retorna usuários que atendem **todos** os critérios simultaneamente:
-- Email contém `@mail.com`
-- Possui endereço na rua `Regent Street`
-- Techs com nome começando em `React` (campo opcional — não exclui o usuário se não tiver)
+Returns users matching **all** criteria simultaneously:
+- Email contains `@mail.com`
+- Has an address on `Regent Street`
+- Has techs with a name starting with `React` (optional field — does not exclude the user if absent)
 
-Retorna apenas os campos `name`, `email`, `addresses` e `techs`.
+Returns only `name`, `email`, `addresses`, and `techs` fields.
 
 ```bash
 curl http://localhost:3333/report
 ```
 
-**Resposta 200:**
+**Response 200:**
 ```json
 [
   {
@@ -391,10 +391,10 @@ curl http://localhost:3333/report
 
 ---
 
-### Resumo de rotas
+### Routes Summary
 
-| Método | Rota | Status sucesso |
-|--------|------|---------------|
+| Method | Route | Success Status |
+|--------|-------|---------------|
 | `GET` | `/users` | 200 |
 | `POST` | `/users` | 201 |
 | `PUT` | `/users/:id` | 200 |
@@ -410,26 +410,26 @@ curl http://localhost:3333/report
 
 ---
 
-## 🧪 Testes
+## 🧪 Tests
 
-### Executar
+### Running
 
 ```bash
-# Todos os testes
+# All tests
 npm test
 
-# Com relatório de coverage
+# With coverage report
 npm run test:coverage
 
-# Modo watch (desenvolvimento)
+# Watch mode (development)
 npm run test:watch
 
-# Suite específica
+# Specific suite
 npm test -- UserController
 npm test -- integration
 ```
 
-### Resultado atual
+### Current Results
 
 ```
 Test Suites: 8 passed, 8 total
@@ -452,33 +452,33 @@ All files              |     100 |      100 |     100 |     100 |
 -----------------------|---------|----------|---------|---------|
 ```
 
-### Estratégia de testes
+### Test Strategy
 
-| Camada | Tipo | Ferramenta |
-|--------|------|-----------|
-| Controllers | Unitário (jest.mock dos models) | Jest |
+| Layer | Type | Tool |
+|-------|------|------|
+| Controllers | Unit (jest.mock models) | Jest |
 | Models | Real SQLite in-memory | Jest + Sequelize |
-| Rotas | Integração (stack completa) | Supertest + SQLite in-memory |
+| Routes | Integration (full stack) | Supertest + SQLite in-memory |
 
 ---
 
 ## ⚙️ Lint
 
 ```bash
-# Verificar
+# Check
 npm run lint
 
-# Corrigir automaticamente
+# Auto-fix
 npm run lint:fix
 ```
 
-Configuração: ESLint 8 com `eslint-config-airbnb-base`. Regras em `.eslintrc.json`.
+Configuration: ESLint 8 with `eslint-config-airbnb-base`. Rules defined in `.eslintrc.json`.
 
 ---
 
 ## 🐳 Docker
 
-### Subir apenas o banco (PostgreSQL)
+### Start database only (PostgreSQL)
 
 ```bash
 docker-compose up -d db
@@ -487,17 +487,17 @@ npm run db:migrate
 npm start
 ```
 
-### Subir aplicação + banco completo
+### Start full stack (app + database)
 
 ```bash
 docker-compose up -d
 ```
 
-O serviço `app` aguarda o banco ficar saudável antes de iniciar (`depends_on` com `healthcheck`).
+The `app` service waits for the database to be healthy before starting (`depends_on` with `healthcheck`).
 
-### Variáveis no `docker-compose.yml`
+### Variables in `docker-compose.yml`
 
-São lidas do `.env` automaticamente. Exemplo:
+Read from `.env` automatically. Example:
 
 ```bash
 DB_NAME=sqlnode
@@ -508,28 +508,28 @@ PORT=3333
 
 ---
 
-## 📦 Scripts disponíveis
+## 📦 Available Scripts
 
-| Script | Descrição |
-|--------|-----------|
-| `npm run dev` | Servidor com hot-reload (nodemon) |
-| `npm start` | Servidor de produção |
-| `npm test` | Todos os testes |
-| `npm run test:watch` | Testes em modo watch |
-| `npm run test:coverage` | Testes + relatório de coverage |
-| `npm run lint` | Verificar lint |
-| `npm run lint:fix` | Corrigir lint automaticamente |
-| `npm run db:create` | Criar banco |
-| `npm run db:migrate` | Rodar migrations |
-| `npm run db:migrate:undo` | Reverter última migration |
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Development server with hot-reload (nodemon) |
+| `npm start` | Production server |
+| `npm test` | Run all tests |
+| `npm run test:watch` | Tests in watch mode |
+| `npm run test:coverage` | Tests + coverage report |
+| `npm run lint` | Check lint |
+| `npm run lint:fix` | Auto-fix lint issues |
+| `npm run db:create` | Create database |
+| `npm run db:migrate` | Run migrations |
+| `npm run db:migrate:undo` | Revert last migration |
 
 ---
 
-## 📋 Modelos
+## 📋 Models
 
 ### User
 
-| Campo | Tipo | Constraint |
+| Field | Type | Constraint |
 |-------|------|-----------|
 | `id` | INTEGER | PK, AUTO INCREMENT |
 | `name` | STRING | NOT NULL |
@@ -537,11 +537,11 @@ PORT=3333
 | `created_at` | DATE | NOT NULL |
 | `updated_at` | DATE | NOT NULL |
 
-Relacionamentos: `hasMany Address`, `belongsToMany Tech` (through `user_techs`)
+Relationships: `hasMany Address`, `belongsToMany Tech` (through `user_techs`)
 
 ### Address
 
-| Campo | Tipo | Constraint |
+| Field | Type | Constraint |
 |-------|------|-----------|
 | `id` | INTEGER | PK, AUTO INCREMENT |
 | `user_id` | INTEGER | FK → users.id (CASCADE) |
@@ -549,23 +549,23 @@ Relacionamentos: `hasMany Address`, `belongsToMany Tech` (through `user_techs`)
 | `street` | STRING | NOT NULL |
 | `number` | INTEGER | NOT NULL |
 
-Relacionamentos: `belongsTo User`
+Relationships: `belongsTo User`
 
 ### Tech
 
-| Campo | Tipo | Constraint |
+| Field | Type | Constraint |
 |-------|------|-----------|
 | `id` | INTEGER | PK, AUTO INCREMENT |
 | `name` | STRING | NOT NULL, UNIQUE |
 
-Relacionamentos: `belongsToMany User` (through `user_techs`)
+Relationships: `belongsToMany User` (through `user_techs`)
 
 ---
 
-## 📄 Licença
+## 📄 License
 
-MIT — veja o arquivo [LICENSE](LICENSE) para detalhes.
+MIT — see the [LICENSE](LICENSE) file for details.
 
-## 👨‍💻 Autor
+## 👨‍💻 Author
 
 **Luiz Curti** — [@luizcurti](https://github.com/luizcurti)
