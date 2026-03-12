@@ -9,9 +9,13 @@ const routes = express.Router();
 
 routes.get('/users', UserController.index);
 routes.post('/users', UserController.store);
+routes.put('/users/:id', UserController.update);
+routes.delete('/users/:id', UserController.destroy);
 
 routes.get('/users/:user_id/addresses', AddressController.index);
 routes.post('/users/:user_id/addresses', AddressController.store);
+routes.put('/users/:user_id/addresses/:address_id', AddressController.update);
+routes.delete('/users/:user_id/addresses/:address_id', AddressController.destroy);
 
 routes.get('/users/:user_id/techs', TechController.index);
 routes.post('/users/:user_id/techs', TechController.store);

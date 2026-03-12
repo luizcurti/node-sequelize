@@ -1,145 +1,145 @@
 # Node.js + Sequelize API
 
-> A complete RESTful API built with Node.js, Express, and Sequelize ORM featuring multi-database support (SQLite/PostgreSQL), comprehensive testing, and Docker integration.
+> API RESTful completa construída com Node.js, Express e Sequelize ORM. Suporte multi-banco (SQLite/PostgreSQL), testes com 100% de coverage e Docker.
 
-[![CI](https://github.com/luizcurti/node-sequelize/actions/workflows/ci.yml/badge.svg)](https://github.com/luizcurti/node-sequelize/actions/workflows/ci.yml)
 [![Node.js](https://img.shields.io/badge/Node.js-v22.x-green.svg)](https://nodejs.org/)
 [![Express](https://img.shields.io/badge/Express-v5.x-blue.svg)](https://expressjs.com/)
 [![Sequelize](https://img.shields.io/badge/Sequelize-v6.x-52B0E7.svg)](https://sequelize.org/)
 [![Jest](https://img.shields.io/badge/Jest-v29.x-C21325.svg)](https://jestjs.io/)
-[![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen.svg)](./TESTS.md)
+[![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen.svg)](#-testes)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-## 📋 Table of Contents
+## Sumário
 
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Project Structure](#-project-structure)
-- [Getting Started](#-getting-started)
-- [Database Configuration](#-database-configuration)
-- [API Endpoints](#-api-endpoints)
-- [Testing](#-testing)
-- [Code Quality](#-code-quality)
-- [Docker Support](#-docker-support)
-- [Contributing](#-contributing)
-- [License](#-license)
+- [Funcionalidades](#-funcionalidades)
+- [Stack](#-stack)
+- [Estrutura do projeto](#-estrutura-do-projeto)
+- [Como rodar](#-como-rodar)
+- [Configuração de banco](#-configuração-de-banco)
+- [Rotas da API](#-rotas-da-api)
+- [Testes](#-testes)
+- [Lint](#-lint)
+- [Docker](#-docker)
+- [Modelos](#-modelos)
+- [Licença](#-licença)
 
-## ✨ Features
+---
 
-- 🚀 **RESTful API** with Express.js
-- 🗄️ **Multi-database support** (SQLite for development, PostgreSQL for production)
-- 🔄 **Database migrations** with Sequelize CLI
-- 🧪 **100% test coverage** on controllers and models (68 unit tests)
-- 🎯 **Association handling** (One-to-Many, Many-to-Many)
-- 🐳 **Docker support** with PostgreSQL
-- 📝 **Code linting** with ESLint (Airbnb style guide)
-- 🔍 **Advanced queries** with reports and filters
-- 📦 **In-memory testing** for fast test execution
-- 🛠️ **Easy migration management**
-- ⚙️ **CI/CD** with GitHub Actions
+## ✨ Funcionalidades
 
-## 🛠️ Tech Stack
+- CRUD completo de **usuários**, **endereços** e **tecnologias**
+- Relacionamentos ORM: `hasMany`, `belongsTo`, `belongsToMany`
+- Validações de entrada (campos obrigatórios, email único, email inválido → 400/409)
+- Tratamento de erros em todos os controllers (500 nunca vaza stack trace)
+- Suporte a SQLite (dev/test) e PostgreSQL (produção)
+- **118 testes** — unitários + integração via supertest — **100% de coverage**
+- Lint com ESLint (Airbnb style guide)
+- Docker Compose com healthcheck e serviço da aplicação
 
-- **Runtime**: Node.js v22.x+
-- **Framework**: Express v5.x
-- **ORM**: Sequelize v6.x
-- **Databases**: SQLite (dev), PostgreSQL (prod)
-- **Testing**: Jest v29.x
-- **Linting**: ESLint v8.x (Airbnb config)
-- **DevOps**: Docker & Docker Compose
-- **CI/CD**: GitHub Actions
+---
 
-## 📁 Project Structure
+## 🛠️ Stack
+
+| Camada | Tecnologia |
+|--------|-----------|
+| Runtime | Node.js 22.x |
+| Framework | Express 5.x |
+| ORM | Sequelize 6.x |
+| Banco (dev/test) | SQLite 3 |
+| Banco (prod) | PostgreSQL 14 |
+| Testes | Jest 29 + Supertest |
+| Lint | ESLint 8 (Airbnb) |
+| Container | Docker + Docker Compose |
+
+---
+
+## 📁 Estrutura do projeto
 
 ```
 node-sequelize/
 ├── src/
-│   ├── controllers/          # Request handlers
-│   │   ├── UserController.js
-│   │   ├── AddressController.js
-│   │   ├── TechController.js
-│   │   └── ReportController.js
-│   ├── models/               # Sequelize models
-│   │   ├── User.js
+│   ├── controllers/
+│   │   ├── UserController.js       # index, store, update, destroy
+│   │   ├── AddressController.js    # index, store, update, destroy
+│   │   ├── TechController.js       # index, store, delete
+│   │   └── ReportController.js     # show
+│   ├── models/
+│   │   ├── User.js                 # validações + associações
 │   │   ├── Address.js
 │   │   └── Tech.js
 │   ├── database/
-│   │   ├── index.js          # Database connection
-│   │   └── migrations/       # Database migrations
+│   │   ├── index.js                # conexão Sequelize
+│   │   └── migrations/             # 4 migrations
 │   ├── config/
-│   │   └── database.js       # Database configuration
-│   ├── __tests__/            # Test files
-│   │   ├── controllers/      # Controller tests
-│   │   └── models/           # Model tests
-│   ├── app.js                # Express configuration
-│   ├── routes.js             # API routes
-│   └── server.js             # Server entry point
-├── .github/
-│   └── workflows/
-│       └── ci.yml            # GitHub Actions CI
-├── docker-compose.yml        # PostgreSQL container
-├── jest.config.js            # Jest configuration
-├── .eslintrc.json            # ESLint rules
-└── package.json              # Dependencies & scripts
+│   │   └── database.js             # dev / test / production
+│   ├── __tests__/
+│   │   ├── controllers/            # testes unitários (mocks)
+│   │   ├── models/                 # testes de model (SQLite in-memory)
+│   │   └── integration/
+│   │       └── routes.test.js      # testes de integração (supertest)
+│   ├── app.js
+│   ├── routes.js
+│   └── server.js
+├── api.collection.json             # Postman collection
+├── docker-compose.yml
+├── Dockerfile
+├── .env.example
+├── jest.config.js
+├── .eslintrc.json
+└── package.json
 ```
 
-## 🚀 Getting Started
+---
 
-### Prerequisites
+## 🚀 Como rodar
 
-- Node.js 22.x or higher
-- npm or yarn
-- Docker (optional, for PostgreSQL)
+### Pré-requisitos
 
-### Installation
+- Node.js 22.x ou superior
+- npm
+- Docker (opcional, para PostgreSQL)
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/luizcurti/node-sequelize.git
-   cd node-sequelize
-   ```
+### Instalação
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+```bash
+# 1. Clone o repositório
+git clone https://github.com/luizcurti/node-sequelize.git
+cd node-sequelize
 
-3. **Run database migrations**
-   ```bash
-   npm run db:migrate
-   ```
+# 2. Instale as dependências
+npm install
 
-4. **Start the development server**
-   ```bash
-   npm run dev
-   ```
+# 3. Copie o .env (ajuste conforme necessário)
+cp .env.example .env
 
-The API will be available at `http://localhost:3333`
+# 4. Rode as migrations (cria o banco SQLite local)
+npm run db:migrate
 
-## 🗄️ Database Configuration
+# 5. Inicie o servidor de desenvolvimento
+npm run dev
+```
 
-The project supports multiple database configurations:
+A API estará disponível em `http://localhost:3333`.
 
-### Development (SQLite)
-- **Location**: `./database.sqlite`
-- **Pros**: No setup required, portable
-- **Cons**: Limited for production use
+---
 
-### Test (SQLite In-Memory)
-- **Location**: RAM (`:memory:`)
-- **Pros**: Fast test execution, no file cleanup needed
-- **Cons**: Data lost after tests
+## 🗄️ Configuração de banco
 
-### Production (PostgreSQL)
-- **Location**: Docker container or remote server
-- **Configuration**: Via environment variables
+O projeto usa `NODE_ENV` para selecionar o banco automaticamente via `src/config/database.js`.
 
-#### Environment Variables
+| Ambiente | Banco | Storage |
+|----------|-------|---------|
+| `development` | SQLite | `./database.sqlite` |
+| `test` | SQLite | `:memory:` (RAM) |
+| `production` | PostgreSQL | via variáveis de ambiente |
 
-Create a `.env` file (optional) or export these variables:
+### Variáveis de ambiente (produção)
+
+Crie um arquivo `.env` baseado no `.env.example`:
 
 ```bash
 NODE_ENV=production
+PORT=3333
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=sqlnode
@@ -147,271 +147,425 @@ DB_USER=docker
 DB_PASS=docker
 ```
 
-## 📡 API Endpoints
+---
 
-### Users
+## 📡 Rotas da API
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET    | `/users` | List all users |
-| POST   | `/users` | Create a new user |
-
-**Example Request:**
-```bash
-curl -X POST http://localhost:3333/users \
-  -H "Content-Type: application/json" \
-  -d '{"name": "John Doe", "email": "john@example.com"}'
-```
-
-### Addresses
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET    | `/users/:user_id/addresses` | List user addresses |
-| POST   | `/users/:user_id/addresses` | Add address to user |
-
-**Example Request:**
-```bash
-curl -X POST http://localhost:3333/users/1/addresses \
-  -H "Content-Type: application/json" \
-  -d '{"zipcode": "12345", "street": "Main St", "number": 123}'
-```
-
-### Technologies
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET    | `/users/:user_id/techs` | List user technologies |
-| POST   | `/users/:user_id/techs` | Add technology to user |
-| DELETE | `/users/:user_id/techs` | Remove technology from user |
-
-**Example Request:**
-```bash
-curl -X POST http://localhost:3333/users/1/techs \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Node.js"}'
-```
-
-### Reports
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET    | `/report` | Get filtered user report |
-
-**Description**: Returns users with emails containing "@mail.com", addresses on "Regent Street", and technologies starting with "React".
-
-### 📮 API Collection
-
-Import the `api.collection.json` file into Postman or Insomnia for ready-to-use requests.
-
-## 🧪 Testing
-
-The project includes comprehensive unit tests with **100% coverage** on controllers and models.
-
-### Run Tests
-
-```bash
-# Run all tests
-npm test
-
-# Run with coverage report
-npm run test:coverage
-
-# Run in watch mode
-npm test -- --watch
-
-# Run specific test file
-npm test -- UserController
-```
-
-### Test Results
-
-```
-Test Suites: 7 passed, 7 total
-Tests:       68 passed, 68 total
-Coverage:    100% (controllers & models)
-Time:        ~1 second
-```
-
-### Coverage Report
-
-```
---------------------|---------|----------|---------|---------|
-File                | % Stmts | % Branch | % Funcs | % Lines |
---------------------|---------|----------|---------|---------|
-All files           |     100 |      100 |     100 |     100 |
- controllers        |     100 |      100 |     100 |     100 |
- models             |     100 |      100 |     100 |     100 |
---------------------|---------|----------|---------|---------|
-```
-
-See [TESTS.md](./TESTS.md) for detailed test documentation.
-
-## ⚙️ CI/CD
-
-This project uses **GitHub Actions** for continuous integration. On every push or pull request to the `main` branch, the following checks are executed:
-
-### CI Pipeline Steps
-
-1. ✅ **Code Checkout** - Clone the repository
-2. ✅ **Node.js Setup** - Install Node.js 22.x
-3. ✅ **Dependencies** - Install npm packages
-4. ✅ **Linting** - Run ESLint checks
-5. ✅ **Unit Tests** - Execute all 68 tests
-6. ✅ **Coverage** - Generate coverage report
-
-### CI Configuration
-
-The workflow is defined in `.github/workflows/ci.yml`:
-
-```yaml
-name: CI
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-```
-
-### CI Badge
-
-Check the CI status at the top of this README or visit the [Actions tab](https://github.com/luizcurti/node-sequelize/actions).
-
-## 🎨 Code Quality
-
-### Linting
-
-The project uses ESLint with Airbnb style guide:
-
-```bash
-# Check for linting errors
-npm run lint
-
-# Auto-fix linting errors
-npm run lint:fix
-```
-
-### Available Scripts
-
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start development server with hot reload |
-| `npm start` | Start production server |
-| `npm test` | Run all tests |
-| `npm run test:coverage` | Run tests with coverage report |
-| `npm run lint` | Check code for linting errors |
-| `npm run lint:fix` | Auto-fix linting errors |
-| `npm run db:create` | Create database |
-| `npm run db:migrate` | Run database migrations |
-| `npm run db:migrate:undo` | Rollback last migration |
-
-## 🐳 Docker Support
-
-### PostgreSQL with Docker Compose
-
-1. **Start PostgreSQL container**
-   ```bash
-   docker-compose up -d
-   ```
-
-2. **Set environment to production**
-   ```bash
-   export NODE_ENV=production
-   ```
-
-3. **Run migrations**
-   ```bash
-   npm run db:migrate
-   ```
-
-4. **Start the server**
-   ```bash
-   npm start
-   ```
-
-### Docker Compose Configuration
-
-```yaml
-version: '3.8'
-services:
-  db:
-    image: postgres:14
-    environment:
-      POSTGRES_DB: sqlnode
-      POSTGRES_USER: docker
-      POSTGRES_PASSWORD: docker
-    ports:
-      - '5432:5432'
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-```
-
-## 📚 Database Models
-
-### User
-- `id` (integer, primary key)
-- `name` (string)
-- `email` (string)
-- `created_at` (timestamp)
-- `updated_at` (timestamp)
-
-**Relationships:**
-- Has many Addresses
-- Has many Technologies (through user_techs)
-
-### Address
-- `id` (integer, primary key)
-- `zipcode` (string)
-- `street` (string)
-- `number` (integer)
-- `user_id` (foreign key)
-- `created_at` (timestamp)
-- `updated_at` (timestamp)
-
-**Relationships:**
-- Belongs to User
-
-### Tech
-- `id` (integer, primary key)
-- `name` (string)
-- `created_at` (timestamp)
-- `updated_at` (timestamp)
-
-**Relationships:**
-- Has many Users (through user_techs)
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Guidelines
-
-- Follow the existing code style (ESLint)
-- Write tests for new features
-- Update documentation as needed
-- Keep commits atomic and descriptive
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👨‍💻 Author
-
-**Luiz Curti**
-- GitHub: [@luizcurti](https://github.com/luizcurti)
-
-## 🙏 Acknowledgments
-
-- [Sequelize Documentation](https://sequelize.org/)
-- [Express.js](https://expressjs.com/)
-- [Jest Testing Framework](https://jestjs.io/)
+> Base URL: `http://localhost:3333`
+>
+> Importe `api.collection.json` no Postman para usar todas as rotas prontas.
 
 ---
 
-⭐ If you find this project helpful, please give it a star!
+### Usuários
+
+#### `GET /users`
+Lista todos os usuários.
+
+```bash
+curl http://localhost:3333/users
+```
+
+**Resposta 200:**
+```json
+[
+  { "id": 1, "name": "Alice", "email": "alice@example.com", "created_at": "...", "updated_at": "..." }
+]
+```
+
+---
+
+#### `POST /users`
+Cria um novo usuário.
+
+**Body (JSON):**
+```json
+{ "name": "Alice Silva", "email": "alice@example.com" }
+```
+
+```bash
+curl -X POST http://localhost:3333/users \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Alice Silva", "email": "alice@example.com"}'
+```
+
+| Status | Situação |
+|--------|----------|
+| `201` | Usuário criado |
+| `400` | `name` ou `email` ausentes |
+| `409` | Email já cadastrado |
+
+---
+
+#### `PUT /users/:id`
+Atualiza `name` e/ou `email` de um usuário.
+
+**Body (JSON):**
+```json
+{ "name": "Alice Costa", "email": "alice.nova@example.com" }
+```
+
+```bash
+curl -X PUT http://localhost:3333/users/1 \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Alice Costa"}'
+```
+
+| Status | Situação |
+|--------|----------|
+| `200` | Usuário atualizado |
+| `404` | Usuário não encontrado |
+| `409` | Novo email já em uso |
+
+---
+
+#### `DELETE /users/:id`
+Remove um usuário. Endereços vinculados são excluídos em cascata.
+
+```bash
+curl -X DELETE http://localhost:3333/users/1
+```
+
+| Status | Situação |
+|--------|----------|
+| `204` | Removido (sem corpo) |
+| `404` | Usuário não encontrado |
+
+---
+
+### Endereços
+
+#### `GET /users/:user_id/addresses`
+Lista endereços de um usuário.
+
+```bash
+curl http://localhost:3333/users/1/addresses
+```
+
+**Resposta 200:**
+```json
+[
+  { "id": 1, "zipcode": "01001-000", "street": "Avenida Paulista", "number": 1000, "user_id": 1, "created_at": "...", "updated_at": "..." }
+]
+```
+
+---
+
+#### `POST /users/:user_id/addresses`
+Cria endereço vinculado ao usuário.
+
+**Body (JSON):**
+```json
+{ "zipcode": "01001-000", "street": "Avenida Paulista", "number": 1000 }
+```
+
+```bash
+curl -X POST http://localhost:3333/users/1/addresses \
+  -H "Content-Type: application/json" \
+  -d '{"zipcode": "01001-000", "street": "Avenida Paulista", "number": 1000}'
+```
+
+| Status | Situação |
+|--------|----------|
+| `201` | Endereço criado |
+| `400` | `zipcode`, `street` ou `number` ausentes |
+| `404` | Usuário não encontrado |
+
+---
+
+#### `PUT /users/:user_id/addresses/:address_id`
+Atualiza um endereço (garantindo que pertence ao usuário).
+
+**Body (JSON):**
+```json
+{ "zipcode": "04538-132", "street": "Rua Olimpíadas", "number": 360 }
+```
+
+```bash
+curl -X PUT http://localhost:3333/users/1/addresses/2 \
+  -H "Content-Type: application/json" \
+  -d '{"street": "Rua Nova"}'
+```
+
+| Status | Situação |
+|--------|----------|
+| `200` | Endereço atualizado |
+| `404` | Usuário ou endereço não encontrado |
+
+---
+
+#### `DELETE /users/:user_id/addresses/:address_id`
+Remove um endereço.
+
+```bash
+curl -X DELETE http://localhost:3333/users/1/addresses/2
+```
+
+| Status | Situação |
+|--------|----------|
+| `204` | Removido (sem corpo) |
+| `404` | Usuário ou endereço não encontrado |
+
+---
+
+### Tecnologias
+
+#### `GET /users/:user_id/techs`
+Lista techs do usuário (apenas o campo `name`).
+
+```bash
+curl http://localhost:3333/users/1/techs
+```
+
+**Resposta 200:**
+```json
+[{ "name": "React" }, { "name": "Node.js" }]
+```
+
+---
+
+#### `POST /users/:user_id/techs`
+Adiciona uma tech ao usuário. Se a tech não existir, é criada automaticamente (`findOrCreate`).
+
+**Body (JSON):**
+```json
+{ "name": "React" }
+```
+
+```bash
+curl -X POST http://localhost:3333/users/1/techs \
+  -H "Content-Type: application/json" \
+  -d '{"name": "React"}'
+```
+
+| Status | Situação |
+|--------|----------|
+| `201` | Tech associada |
+| `400` | `name` ausente |
+| `404` | Usuário não encontrado |
+
+---
+
+#### `DELETE /users/:user_id/techs?name=<nome>`
+Remove a associação usuário-tech. A tech permanece na tabela `techs`.
+
+> ⚠️ O nome da tech é passado como **query param**, não no body.
+
+```bash
+curl -X DELETE "http://localhost:3333/users/1/techs?name=React"
+```
+
+| Status | Situação |
+|--------|----------|
+| `204` | Associação removida (sem corpo) |
+| `400` | Query param `name` ausente |
+| `404` | Usuário ou tech não encontrado |
+
+---
+
+### Relatório
+
+#### `GET /report`
+Retorna usuários que atendem **todos** os critérios simultaneamente:
+- Email contém `@mail.com`
+- Possui endereço na rua `Regent Street`
+- Techs com nome começando em `React` (campo opcional — não exclui o usuário se não tiver)
+
+Retorna apenas os campos `name`, `email`, `addresses` e `techs`.
+
+```bash
+curl http://localhost:3333/report
+```
+
+**Resposta 200:**
+```json
+[
+  {
+    "name": "John Doe",
+    "email": "john@mail.com",
+    "addresses": [{ "id": 1, "street": "Regent Street", "zipcode": "12345", "number": 10, "user_id": 1, "created_at": "...", "updated_at": "..." }],
+    "techs": [{ "name": "React" }]
+  }
+]
+```
+
+---
+
+### Resumo de rotas
+
+| Método | Rota | Status sucesso |
+|--------|------|---------------|
+| `GET` | `/users` | 200 |
+| `POST` | `/users` | 201 |
+| `PUT` | `/users/:id` | 200 |
+| `DELETE` | `/users/:id` | 204 |
+| `GET` | `/users/:user_id/addresses` | 200 |
+| `POST` | `/users/:user_id/addresses` | 201 |
+| `PUT` | `/users/:user_id/addresses/:address_id` | 200 |
+| `DELETE` | `/users/:user_id/addresses/:address_id` | 204 |
+| `GET` | `/users/:user_id/techs` | 200 |
+| `POST` | `/users/:user_id/techs` | 201 |
+| `DELETE` | `/users/:user_id/techs?name=` | 204 |
+| `GET` | `/report` | 200 |
+
+---
+
+## 🧪 Testes
+
+### Executar
+
+```bash
+# Todos os testes
+npm test
+
+# Com relatório de coverage
+npm run test:coverage
+
+# Modo watch (desenvolvimento)
+npm run test:watch
+
+# Suite específica
+npm test -- UserController
+npm test -- integration
+```
+
+### Resultado atual
+
+```
+Test Suites: 8 passed, 8 total
+Tests:       118 passed, 118 total
+Snapshots:   0 total
+Time:        ~1.4s
+```
+
+### Coverage
+
+```
+-----------------------|---------|----------|---------|---------|
+File                   | % Stmts | % Branch | % Funcs | % Lines |
+-----------------------|---------|----------|---------|---------|
+All files              |     100 |      100 |     100 |     100 |
+ src/app.js            |     100 |      100 |     100 |     100 |
+ src/routes.js         |     100 |      100 |     100 |     100 |
+ src/controllers/...   |     100 |      100 |     100 |     100 |
+ src/models/...        |     100 |      100 |     100 |     100 |
+-----------------------|---------|----------|---------|---------|
+```
+
+### Estratégia de testes
+
+| Camada | Tipo | Ferramenta |
+|--------|------|-----------|
+| Controllers | Unitário (jest.mock dos models) | Jest |
+| Models | Real SQLite in-memory | Jest + Sequelize |
+| Rotas | Integração (stack completa) | Supertest + SQLite in-memory |
+
+---
+
+## ⚙️ Lint
+
+```bash
+# Verificar
+npm run lint
+
+# Corrigir automaticamente
+npm run lint:fix
+```
+
+Configuração: ESLint 8 com `eslint-config-airbnb-base`. Regras em `.eslintrc.json`.
+
+---
+
+## 🐳 Docker
+
+### Subir apenas o banco (PostgreSQL)
+
+```bash
+docker-compose up -d db
+export NODE_ENV=production
+npm run db:migrate
+npm start
+```
+
+### Subir aplicação + banco completo
+
+```bash
+docker-compose up -d
+```
+
+O serviço `app` aguarda o banco ficar saudável antes de iniciar (`depends_on` com `healthcheck`).
+
+### Variáveis no `docker-compose.yml`
+
+São lidas do `.env` automaticamente. Exemplo:
+
+```bash
+DB_NAME=sqlnode
+DB_USER=docker
+DB_PASS=docker
+PORT=3333
+```
+
+---
+
+## 📦 Scripts disponíveis
+
+| Script | Descrição |
+|--------|-----------|
+| `npm run dev` | Servidor com hot-reload (nodemon) |
+| `npm start` | Servidor de produção |
+| `npm test` | Todos os testes |
+| `npm run test:watch` | Testes em modo watch |
+| `npm run test:coverage` | Testes + relatório de coverage |
+| `npm run lint` | Verificar lint |
+| `npm run lint:fix` | Corrigir lint automaticamente |
+| `npm run db:create` | Criar banco |
+| `npm run db:migrate` | Rodar migrations |
+| `npm run db:migrate:undo` | Reverter última migration |
+
+---
+
+## 📋 Modelos
+
+### User
+
+| Campo | Tipo | Constraint |
+|-------|------|-----------|
+| `id` | INTEGER | PK, AUTO INCREMENT |
+| `name` | STRING | NOT NULL |
+| `email` | STRING | NOT NULL, UNIQUE, isEmail |
+| `created_at` | DATE | NOT NULL |
+| `updated_at` | DATE | NOT NULL |
+
+Relacionamentos: `hasMany Address`, `belongsToMany Tech` (through `user_techs`)
+
+### Address
+
+| Campo | Tipo | Constraint |
+|-------|------|-----------|
+| `id` | INTEGER | PK, AUTO INCREMENT |
+| `user_id` | INTEGER | FK → users.id (CASCADE) |
+| `zipcode` | STRING | NOT NULL |
+| `street` | STRING | NOT NULL |
+| `number` | INTEGER | NOT NULL |
+
+Relacionamentos: `belongsTo User`
+
+### Tech
+
+| Campo | Tipo | Constraint |
+|-------|------|-----------|
+| `id` | INTEGER | PK, AUTO INCREMENT |
+| `name` | STRING | NOT NULL, UNIQUE |
+
+Relacionamentos: `belongsToMany User` (through `user_techs`)
+
+---
+
+## 📄 Licença
+
+MIT — veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+## 👨‍💻 Autor
+
+**Luiz Curti** — [@luizcurti](https://github.com/luizcurti)

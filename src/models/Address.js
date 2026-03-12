@@ -4,9 +4,21 @@ class Address extends Model {
   static init(sequelize) {
     super.init(
       {
-        zipcode: DataTypes.STRING,
-        street: DataTypes.STRING,
-        number: DataTypes.INTEGER,
+        zipcode: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          validate: { notEmpty: true },
+        },
+        street: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          validate: { notEmpty: true },
+        },
+        number: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          validate: { isInt: true, min: 1 },
+        },
       },
       {
         sequelize,

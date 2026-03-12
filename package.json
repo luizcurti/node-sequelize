@@ -1,7 +1,7 @@
 {
   "name": "sqlnode",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/server.js",
   "license": "MIT",
   "scripts": {
     "dev": "nodemon src/server.js",
@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "jest",
+    "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "db:create": "sequelize-cli db:create",
     "db:migrate": "sequelize-cli db:migrate",

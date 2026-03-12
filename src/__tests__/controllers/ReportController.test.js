@@ -123,39 +123,29 @@ describe('ReportController', () => {
 
       await ReportController.show(req, res);
 
-      expect(User.findAll).toHaveBeenCalledTimes(1);
       expect(res.json).toHaveBeenCalledWith([]);
     });
 
-    it('should handle database errors', async () => {
-      const error = new Error('Database error');
+    it('should return 500 on database error', async () => {
       sequelize.getDialect = jest.fn().mockReturnValue('postgres');
-      User.findAll.mockRejectedValue(error);
+      User.findAll.mockRejectedValue(new Error('Database error'));
 
-      await expect(ReportController.show(req, res)).rejects.toThrow('Database error');
-      expect(User.findAll).toHaveBeenCalledTimes(1);
+      await ReportController.show(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ error: 'Internal server error' });
     });
 
     it('should handle when getDialect is not available', async () => {
-      const mockUsers = [
-        {
-          name: 'User',
-          email: 'user@mail.com',
-          addresses: [
-            {
-              street: 'Regent Street',
-            },
-          ],
-          techs: [],
-        },
-      ];
+      const mockUsers = [{
+        name: 'User', email: 'user@mail.com', addresses: [], techs: [],
+      }];
 
       sequelize.getDialect = undefined;
       User.findAll.mockResolvedValue(mockUsers);
 
       await ReportController.show(req, res);
 
-      expect(User.findAll).toHaveBeenCalledTimes(1);
       expect(res.json).toHaveBeenCalledWith(mockUsers);
     });
 

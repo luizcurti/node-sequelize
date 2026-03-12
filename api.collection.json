@@ -1,104 +1,128 @@
 {
-    "info": {
-      "_postman_id": "your-unique-id",
-      "name": "Sequelize Node.js API",
-      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-    },
-    "item": [
-      {
-        "name": "Report",
-        "request": {
-          "method": "GET",
-          "url": "{{base_url}}/report"
-        }
-      },
-      {
-        "name": "Users",
-        "item": [
-          {
-            "name": "Get All Users",
-            "request": {
-              "method": "GET",
-              "url": "{{base_url}}/users"
-            }
-          },
-          {
-            "name": "Create User",
-            "request": {
-              "method": "POST",
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
-              "url": "{{base_url}}/users",
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\"\n}"
-              }
-            }
-          }
-        ]
-      },
-      {
-        "name": "Addresses",
-        "item": [
-          {
-            "name": "Get User Addresses",
-            "request": {
-              "method": "GET",
-              "url": "{{base_url}}/users/1/addresses"
-            }
-          },
-          {
-            "name": "Create Address",
-            "request": {
-              "method": "POST",
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
-              "url": "{{base_url}}/users/2/addresses",
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"zipcode\": \"12345678\",\n  \"street\": \"Main Street\",\n  \"number\": 100\n}"
-              }
-            }
-          }
-        ]
-      },
-      {
-        "name": "Techs",
-        "item": [
-          {
-            "name": "Get User Techs",
-            "request": {
-              "method": "GET",
-              "url": "{{base_url}}/users/1/techs"
-            }
-          },
-          {
-            "name": "Add Tech",
-            "request": {
-              "method": "POST",
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
-              "url": "{{base_url}}/users/1/techs",
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"name\": \"React Native\"\n}"
-              }
-            }
-          },
-          {
-            "name": "Remove Tech",
-            "request": {
-              "method": "DELETE",
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
-              "url": "{{base_url}}/users/1/techs",
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"name\": \"Node.js\"\n}"
-              }
-            }
-          }
-        ]
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "node-sequelize API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Colecao completa de rotas da API node-sequelize."
+  },
+  "item": [
+    {
+      "name": "Report",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/report"
       }
-    ],
-    "variable": [
-      { "key": "base_url", "value": "http://localhost:3333", "type": "string" }
-    ]
-  }
-  
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/users"
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Addresses",
+      "item": [
+        {
+          "name": "Get User Addresses",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/users/1/addresses"
+          }
+        },
+        {
+          "name": "Create Address",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/users/2/addresses",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zipcode\": \"12345678\",\n  \"street\": \"Main Street\",\n  \"number\": 100\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Techs",
+      "item": [
+        {
+          "name": "Get User Techs",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/users/1/techs"
+          }
+        },
+        {
+          "name": "Add Tech",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/users/1/techs",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"React Native\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Remove Tech",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/users/1/techs",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Node.js\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3333",
+      "type": "string"
+    }
+  ]
+}

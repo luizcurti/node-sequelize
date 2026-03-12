@@ -4,7 +4,12 @@ class Tech extends Model {
   static init(sequelize) {
     super.init(
       {
-        name: DataTypes.STRING,
+        name: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          unique: true,
+          validate: { notEmpty: true },
+        },
       },
       {
         sequelize,
