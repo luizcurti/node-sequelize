@@ -18,11 +18,11 @@ services:
 
   app:
     build: .
-    command: npm run dev
+    command: sh -c "npx sequelize-cli db:migrate && npm run dev"
     ports:
       - '${PORT:-3333}:${PORT:-3333}'
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       PORT: ${PORT:-3333}
       DB_HOST: db
       DB_NAME: ${DB_NAME:-sqlnode}

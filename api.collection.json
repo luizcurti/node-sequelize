@@ -39,6 +39,30 @@
               "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\"\n}"
             }
           }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/users/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe Updated\",\n  \"email\": \"john.updated@example.com\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/users/1"
+          }
         }
       ]
     },
@@ -67,6 +91,30 @@
               "mode": "raw",
               "raw": "{\n  \"zipcode\": \"12345678\",\n  \"street\": \"Main Street\",\n  \"number\": 100\n}"
             }
+          }
+        },
+        {
+          "name": "Update Address",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/users/1/addresses/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zipcode\": \"87654321\",\n  \"street\": \"Updated Avenue\",\n  \"number\": 200\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Address",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/users/1/addresses/1"
           }
         }
       ]
@@ -100,18 +148,19 @@
         },
         {
           "name": "Remove Tech",
+          "description": "Remove tech via query param ?name=. O body é ignorado pelo servidor.",
           "request": {
             "method": "DELETE",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": "{{base_url}}/users/1/techs",
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Node.js\"\n}"
+            "url": {
+              "raw": "{{base_url}}/users/1/techs?name=Node.js",
+              "host": ["{{base_url}}"],
+              "path": ["users", "1", "techs"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Node.js"
+                }
+              ]
             }
           }
         }
